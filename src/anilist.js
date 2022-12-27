@@ -5,9 +5,9 @@ fetch(
     .then((reponse) => reponse.text())
     .then((text) => {
         let lines = text.split("\n");
-        for (line of lines) {
-            let entries = line.split("\t");
-            let entry = {
+        for (const line of lines) {
+            const entries = line.split("\t");
+            const entry = {
                 last_updated: entries[0],
                 status: entries[1],
                 episodes: entries[2],
@@ -22,11 +22,11 @@ fetch(
             animelist.push(entry);
         }
 
-        let list = document.getElementById("list");
-        let header = document.getElementById("list-header");
+        const list = document.getElementById("list");
+        const header = document.getElementById("list-header");
         let list_content = header.outerHTML;
 
-        for (entry of animelist) {
+        for (const entry of animelist) {
             list_content += `<tr>
                 <td><a href="${entry.link}">${entry.name}</a></td>
                 <td>${entry.status}</td>
