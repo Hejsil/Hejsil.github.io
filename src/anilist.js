@@ -1,3 +1,21 @@
+let drawTable = (list_to_draw) => {
+    const list = document.getElementById("list");
+    const header = document.getElementById("list-header");
+    let list_content = header.outerHTML;
+
+    for (const entry of list_to_draw) {
+        list_content += `<tr>
+                <td><a href="${entry.link}">${entry.name}</a></td>
+                <td>${entry.status}</td>
+                <td>${entry.episodes}</td>
+                <td>${entry.watched}</td>
+                <td>${entry.last_updated}</td>
+            </tr>`;
+    }
+
+    list.innerHTML = list_content;
+};
+
 let animelist = [];
 fetch(
     "https://raw.githubusercontent.com/Hejsil/dotfiles/master/local/share/aniz/list",
@@ -22,19 +40,5 @@ fetch(
             animelist.push(entry);
         }
 
-        const list = document.getElementById("list");
-        const header = document.getElementById("list-header");
-        let list_content = header.outerHTML;
-
-        for (const entry of animelist) {
-            list_content += `<tr>
-                <td><a href="${entry.link}">${entry.name}</a></td>
-                <td>${entry.status}</td>
-                <td>${entry.episodes}</td>
-                <td>${entry.watched}</td>
-                <td>${entry.last_updated}</td>
-            </tr>`;
-        }
-
-        list.innerHTML = list_content;
+        drawTable(animelist);
     });
