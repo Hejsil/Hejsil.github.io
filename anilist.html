@@ -4,6 +4,7 @@
     <title>Anilist ⋅ Hejsil</title>
     <link rel="stylesheet" href="https://unpkg.com/marx-css/css/marx.min.css">
     <link rel="stylesheet" href="./css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="./src/anilist.js"></script>
 </head>
 <body>
@@ -22,7 +23,10 @@
     </nav>
     <main>
         <h1>Anilist</h1>
-        <table id="list"></table>
+        <section id="stats">
+            <canvas id="byYearChart"></canvas>
+        </section>
+        <table id="animeList"></table>
     </main>
 </body>
 </html>
