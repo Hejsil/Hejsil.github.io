@@ -82,6 +82,15 @@ function animeDatabaseBySource(database) {
     return result;
 }
 
+function datasetByStatus(entries, status) {
+    return {
+        label: statusToString(status),
+        data: entries.map((entry) =>
+            entry[1].filter((item) => item.status == status).length
+        ),
+    };
+}
+
 function animeListByYear(anime_list, anime_database_by_src) {
     return Object.groupBy(
         anime_list,
@@ -92,35 +101,53 @@ function animeListByYear(anime_list, anime_database_by_src) {
     );
 }
 
-function drawByYearChart(anime_list_by_release_year) {
+function drawByReleaseYearChart(anime_list_by_release_year) {
     const by_release_year_entries = Object.entries(anime_list_by_release_year);
     by_release_year_entries.sort((a, b) => a[0] - b[0]);
 
-    function datasetByStatus(status) {
-        return by_release_year_entries.map((entry) =>
-            entry[1].filter((item) => item.status == status).length
-        );
-    }
-
-    const chart_element = document.getElementById("byYearChart");
+    const chart_element = document.getElementById("byReleaseYearChart");
     new Chart(chart_element, {
         type: "bar",
         data: {
             labels: by_release_year_entries.map((item) => item[0]),
-            datasets: [{
-                label: "Completed",
-                data: datasetByStatus("c"),
-            }, {
-                label: "Dropped",
-                data: datasetByStatus("d"),
-            }],
+            datasets: [
+                datasetByStatus(by_release_year_entries, "c"),
+                datasetByStatus(by_release_year_entries, "d"),
+            ],
         },
         options: {
             plugins: {
-                title: {
-                    display: true,
-                    text: "Anime by Release Year",
-                },
+                title: { display: true, text: "Anime by Release Year" },
+            },
+        },
+    });
+}
+
+function animeListByType(anime_list, anime_database_by_src) {
+    return Object.groupBy(
+        anime_list,
+        (item) => {
+            const entry = anime_database_by_src[item.source];
+            return entry.type;
+        },
+    );
+}
+
+function drawByTypeChart(anime_list_by_type) {
+    const by_type_entries = Object.entries(anime_list_by_type);
+    const chart_element = document.getElementById("byTypeChart");
+    new Chart(chart_element, {
+        type: "bar",
+        data: {
+            labels: by_type_entries.map((item) => item[0]),
+            datasets: [
+                datasetByStatus(by_type_entries, "c"),
+                datasetByStatus(by_type_entries, "d"),
+            ],
+        },
+        options: {
+            plugins: {
+                title: { display: true, text: "Anime by Type" },
             },
         },
     });
@@ -137,8 +164,13 @@ async function asyncMain() {
         anime_list,
         anime_database_by_src,
     );
+    const anime_list_by_type = animeListByType(
+        anime_list,
+        anime_database_by_src,
+    );
 
-    drawByYearChart(anime_list_by_release_year);
+    drawByReleaseYearChart(anime_list_by_release_year);
+    drawByTypeChart(anime_list_by_type);
     drawAnimeList(anime_list);
 }
 
